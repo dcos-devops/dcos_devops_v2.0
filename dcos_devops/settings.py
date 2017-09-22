@@ -37,11 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'alertinfos',
-    'taghost',
-    'dcoscluster',
-    'resourceremain',
-    'resourceinfos',
+    'dcos_devops',
 ]
 
 MIDDLEWARE = [

@@ -35,7 +35,7 @@ class DcosCluster(models.Model):
 
 
 class DcosHost(models.Model):
-    id = models.CharField(max_length=32)
+    id = models.CharField(primary_key=True,max_length=32)
     label = models.CharField(max_length=256, blank=True, null=True)
     ip_addr = models.CharField(unique=True, max_length=32)
     cpus = models.CharField(max_length=32, blank=True, null=True)
