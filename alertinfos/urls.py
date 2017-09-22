@@ -18,5 +18,7 @@ from django.contrib import admin
 import views
 
 urlpatterns = [
-    url(r'^hello$', views.hello),
+    url(r'^/$', views.index),
+    url(r'^/get_ip$', views.get_ip),
+    url(r'^/get_rest_information$', views.get_table_information),
 ]
