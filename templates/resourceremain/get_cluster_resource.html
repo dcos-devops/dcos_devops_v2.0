@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block mainbody %}
+    <div class="row-fluid">
+
+    </div>
+    <div class="row-fluid">
+        <table class="table table-bordered table-striped">
+            <h3>{{ zj01_name }}</h3><p>MasterIP {{ zj01_mesos_ips }}</p>
+            <thead>
+                <tr>
+                    <td><b>集群约束</b></td>
+                    <td><b>slave节点数</b></td>
+                    <td><b>CPU剩余/C</b></td>
+                    <td><b>MEM剩余/MB</b></td>
+                    <td><b>DISK剩余/MB</b></td>
+                    <td><b>PORT剩余/个</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k,v in zj01_resource.items %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v.0 }}</td>
+                        <td>{{ v.1 }}</td>
+                        <td>{{ v.2 }}</td>
+                        <td>{{ v.3 }}</td>
+                        <td>{{ v.4 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-bordered table-striped">
+            <h3>{{ mesos_master_name }}</h3><p>MasterIP {{ mesos_master_ips }}</p>
+            <thead>
+                <tr>
+                    <td><b>集群约束</b></td>
+                    <td><b>slave节点数</b></td>
+                    <td><b>CPU剩余/C</b></td>
+                    <td><b>MEM剩余/MB</b></td>
+                    <td><b>DISK剩余/MB</b></td>
+                    <td><b>PORT剩余/个</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k,v in mesos_master_resource.items %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v.0 }}</td>
+                        <td>{{ v.1 }}</td>
+                        <td>{{ v.2 }}</td>
+                        <td>{{ v.3 }}</td>
+                        <td>{{ v.4 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <table class="table table-bordered table-striped">
+            <h3>{{ new_x86_name }}</h3><p>MasterIP {{ new_x86_name_ips }}</p>
+            <thead>
+                <tr>
+                    <td><b>集群约束</b></td>
+                    <td><b>slave节点数</b></td>
+                    <td><b>CPU剩余/C</b></td>
+                    <td><b>MEM剩余/MB</b></td>
+                    <td><b>DISK剩余/MB</b></td>
+                    <td><b>PORT剩余/个</b></td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for k,v in new_x86_resource.items %}
+                    <tr>
+                        <td>{{ k }}</td>
+                        <td>{{ v.0 }}</td>
+                        <td>{{ v.1 }}</td>
+                        <td>{{ v.2 }}</td>
+                        <td>{{ v.3 }}</td>
+                        <td>{{ v.4 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+{% endblock %}

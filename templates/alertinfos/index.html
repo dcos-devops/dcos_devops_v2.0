@@ -8,7 +8,7 @@
                         <select id="level" name="warning-level" class="form-control">
                             <option>--- 请选择告警级别 ---</option>
                         {% for level in levels %}
-                            <option>{{ level[0] }}</option>
+                            <option>{{ level.0 }}</option>
                         {% endfor %}
                         </select>
                     </form>

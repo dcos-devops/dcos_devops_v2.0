@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+{% block mainbody %}
+    <div class="row-fluid">
+    <div id="main" class="aaa1" style="width: 400px;height:300px; margin:10px;margin-bottom:60px; float: left;"></div>
+		<script type="text/javascript" charset="utf-8">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+        var dcos_cpu_mem_allocate = eval({{ dcos_cpu_mem_allocate_info|safe }});
+        var yarn_cpu_mem_allocate = eval({{ yarn_cpu_mem_allocate_info|safe }});
+        var time_line = dcos_cpu_mem_allocate.time_line
+
+	option = {
+			    title: {
+			        text: 'CPU分配率'
+			    },
+			    tooltip: {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['DCOS','Yarn']
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    toolbox: {
+			        feature: {
+			            saveAsImage: {}
+			        },
+				x:'90%'
+			    },
+			    xAxis: {
+			        type: 'category',
+			        boundaryGap: false,
+	        		data: time_line
+			    },
+			    yAxis: {
+			        type: 'value',
+                    axisLabel: {
+                        formatter: '{value} C'
+                        }
+			    },
+			    series: [
+
+			        {
+			            name:'DCOS',
+			            type:'line',
+			            stack: '总量',
+			            data:dcos_cpu_mem_allocate.allocate_cpu
+			        },
+			        {
+			            name:'Yarn',
+			            type:'line',
+			            stack: '总量',
+			            data:yarn_cpu_mem_allocate.allocate_cpu
+			        }
+			    ]
+			};
+        myChart.setOption(option);
+    </script>
+    <div id="main1" class="aaa2" style="width: 400px;height:300px; margin:10px;margin-bottom:60px; float: left;"></div>
+		<script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main1'));
+        var dcos_cpu_mem_allocate = eval({{ dcos_cpu_mem_allocate_info|safe }});
+        var yarn_cpu_mem_allocate = eval({{ yarn_cpu_mem_allocate_info|safe }});
+        var time_line = dcos_cpu_mem_allocate.time_line
+
+			option = {
+	    title: {
+	        text: '内存分配率'
+	    },
+	    tooltip: {
+	        trigger: 'axis'
+	    },
+	    legend: {
+	        data:['DCOS','Yarn']
+	    },
+	    grid: {
+	        left: '3%',
+	        right: '4%',
+	        bottom: '3%',
+	        containLabel: true
+	    },
+	    toolbox: {
+	        feature: {
+	            saveAsImage: {}
+	        },
+		x:'90%'
+	    },
+	    xAxis: {
+	        type: 'category',
+	        boundaryGap: false,
+	        data: time_line
+	    },
+	    yAxis: {
+	        type: 'value',
+            axisLabel: {
+                        formatter: '{value} GB'
+                        }
+	    },
+	    series: [
+
+	        {
+	            name:'DCOS',
+	            type:'line',
+	            stack: '总量',
+	            data: dcos_cpu_mem_allocate.allocate_mem
+	        },
+	        {
+	            name:'Yarn',
+	            type:'line',
+	            stack: '总量',
+	            data: yarn_cpu_mem_allocate.allocate_mem
+	        }
+	    ]
+		};
+    myChart.setOption(option);
+    </script>
+    <br> <br>
+    <div id="main2" class="aaa3" style="width: 400px;height:300px; margin:10px; margin-bottom:60px; float: left;"></div>
+		<script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main2'));
+        var dcos_cpu_mem_used = eval({{ dcos_cpu_mem_used_info|safe }});
+        var yarn_cpu_mem_used = eval({{ yarn_cpu_mem_used_info|safe }});
+        var time_line = dcos_cpu_mem_used.time_line;
+
+				option = {
+			    title: {
+			        text: 'CPU使用率'
+			    },
+			    tooltip: {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['DCOS','Yarn']
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    toolbox: {
+			        feature: {
+			            saveAsImage: {}
+			        }
+			    },
+			    xAxis: {
+			        type: 'category',
+			        boundaryGap: false,
+			        data: time_line
+			    },
+			    yAxis: {
+			        type: 'value',
+                    axisLabel: {
+                        formatter: '{value} C'
+                        }
+			    },
+			    series: [
+
+			        {
+			            name:'DCOS',
+			            type:'line',
+			            stack: '总量',
+			            data: dcos_cpu_mem_used.used_cpu,
+			        },
+			        {
+			            name:'Yarn',
+			            type:'line',
+			            stack: '总量',
+			            data: yarn_cpu_mem_used.used_cpu,
+			        }
+			    ]
+			};
+        myChart.setOption(option);
+    </script>
+    <div id="main3" class="aaa4" style="width: 400px;height:300px; margin:10px;margin-bottom:60px; float: left;"></div>
+		<script type="text/javascript">
+        var myChart = echarts.init(document.getElementById('main3'));
+        var dcos_cpu_mem_used = eval({{ dcos_cpu_mem_used_info|safe }});
+        var yarn_cpu_mem_used = eval({{ yarn_cpu_mem_used_info|safe }});
+        var time_line = dcos_cpu_mem_used.time_line;
+
+				option = {
+			    title: {
+			        text: '内存使用率'
+			    },
+			    tooltip: {
+			        trigger: 'axis'
+			    },
+			    legend: {
+			        data:['DCOS','Yarn']
+			    },
+			    grid: {
+			        left: '3%',
+			        right: '4%',
+			        bottom: '3%',
+			        containLabel: true
+			    },
+			    toolbox: {
+			        feature: {
+			            saveAsImage: {}
+			        }
+			    },
+			    xAxis: {
+			        type: 'category',
+			        boundaryGap: false,
+			        data: time_line
+			    },
+			    yAxis: {
+			        type: 'value',
+                    axisLabel: {
+                        formatter: '{value} GB'
+                        }
+			    },
+			    series: [
+
+			        {
+			            name:'DCOS',
+			            type:'line',
+			            stack: '总量',
+			            data: dcos_cpu_mem_used.used_memory
+			        },
+			        {
+			            name:'Yarn',
+			            type:'line',
+			            stack: '总量',
+			            data: yarn_cpu_mem_used.used_memory
+			        }
+			    ]
+			};
+        myChart.setOption(option);
+    </script>
+    </div>
+{% endblock %}

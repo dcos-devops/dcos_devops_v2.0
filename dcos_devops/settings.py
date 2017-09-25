@@ -55,7 +55,10 @@ ROOT_URLCONF = 'dcos_devops.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR+"/templates",],
+        'DIRS': [BASE_DIR + "/templates",
+                 BASE_DIR + "/templates/alertinfos",
+                 BASE_DIR + "/templates/resourceremain",
+                 BASE_DIR + "/templates/dcos_yarn", ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,8 +83,8 @@ DATABASES = {
         'NAME': 'icinga_info',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST':'20.26.25.145',
-        'PORT':'3366',
+        'HOST': '20.26.25.145',
+        'PORT': '3366',
     }
 }
 
