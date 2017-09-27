@@ -65,7 +65,7 @@
         var myChart = echarts.init(document.getElementById('main1'));
         var dcos_cpu_mem_allocate = eval({{ dcos_cpu_mem_allocate_info|safe }});
         var yarn_cpu_mem_allocate = eval({{ yarn_cpu_mem_allocate_info|safe }});
-        var time_line = dcos_cpu_mem_allocate.time_line
+        var time_line = dcos_cpu_mem_allocate.time_line;
 
 			option = {
 	    title: {
@@ -164,13 +164,13 @@
 			            name:'DCOS',
 			            type:'line',
 			            stack: '总量',
-			            data: dcos_cpu_mem_used.used_cpu,
+			            data: dcos_cpu_mem_used.used_cpu
 			        },
 			        {
 			            name:'Yarn',
 			            type:'line',
 			            stack: '总量',
-			            data: yarn_cpu_mem_used.used_cpu,
+			            data: yarn_cpu_mem_used.used_cpu
 			        }
 			    ]
 			};

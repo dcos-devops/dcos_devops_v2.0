@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+ 
+{% block mainbody %}
+    <div class="row-fluid">
+        <div id="chooseform">
+            <div style="width: 250px; height:20px;" id="div1">
+                <form>
+                    <select id="fields" name="fields" class="form-control">
+                        <option >--- 请选择生产域 ---</option>
+                        {% for field in fields %}
+                            <option>{{ field }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+            <div style="width: 250px; height:20px;" id="div2">
+                <form>
+                    <select id="clusters" name="clusters" class="selector2 form-control">
+                        <option>--- 请选择集群约束 ---</option>
+                    </select>
+                </form>
+            </div>
+            <div style="width: 250px; height:20px;" id="div3">
+                <input id="search_info" name="search_info" class="selector3 form-control" placeholder="搜索">
+            </div>
+            <br>
+            <br>
+        </div>
+        <div id="table">
+            <table class="table table-bordered table-striped" id="tb">
+                <thead id="a1">
+                    <tr>
+                        <td><b>生产域</b></td>
+                        <td><b>集群约束</b></td>
+                        <td><b>主机名</b></td>
+                        <td><b>主机IP</b></td>
+                        <td><b>组件名</b></td>
+                        <td><b>端口</b></td>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+        <div id="main" style="width: 800px; height:400px;"></div>
+    <div class="row-fluid">
+
+    </div>
+    <div>
+    <script>
+    $(document).ready(function(){
+      $("#fields").change(function(){
+        var field = $("#fields").val();
+        $.get("/get_cluster", {'field': field}, function (ret) {
+            var obj = document.getElementById("clusters");
+            obj.options.length = 1;
+            var clusters = ret.clusters;
+            for(var i = 0; i < clusters.length + 1; i++){
+                var option = $("<option>").val(clusters[i]).text(clusters[i]);
+                $(".selector2").append(option)
+            }
+        })
+      });
+    });
+    </script>
+    <script>
+    $(document).ready(function(){
+      $("#clusters").change(function(){
+        var cluster = $("#clusters").val();
+        var field = $("#fields").val();
+        $.get("/get_host_info", {'cluster': cluster, "field": field}, function (ret) {
+            $('table tbody').empty();
+            var host_info = ret.host_info;
+            for(var i = 0; i < host_info.length + 1; i++) {
+                var item = "<tr>" +
+                    "<td>" + host_info[i]["field"] + "</td>" +
+                    "<td>" + host_info[i]["cluster"] + "</td>" +
+                    "<td>" + host_info[i]["name"] + "</td>" +
+                    "<td>" + host_info[i]["ip"] + "</td>" +
+                    "<td>" + host_info[i]["comp_name"] + "</td>" +
+                    "<td>" + host_info[i]["comp_port"] + "</td>" +
+                    "</tr>";
+                $(".table").append(item)
+            }
+        });
+      });
+    });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#search_info").keyup(function () {
+
+                var search_info = $("#search_info").val();
+                var cluster = $("#clusters").val();
+                var field = $("#fields").val();
+                $.get("/search_host_info", {"search_info": search_info, "cluster": cluster, "field": field}, function (ret) {
+                    $('table tbody').empty();
+                    var host_info = ret.host_info;
+                    for (var i = 0; i < host_info.length + 1; i++) {
+                        var item = "<tr>" +
+                            "<td>" + host_info[i]["field"] + "</td>" +
+                            "<td>" + host_info[i]["cluster"] + "</td>" +
+                            "<td>" + host_info[i]["name"] + "</td>" +
+                            "<td>" + host_info[i]["ip"] + "</td>" +
+                            "<td>" + host_info[i]["comp_name"] + "</td>" +
+                            "<td>" + host_info[i]["comp_port"] + "</td>" +
+                            "</tr>";
+                        $(".table").append(item)
+                    }
+                });
+            })
+        })
+    </script>
+</div>
+{% endblock %}
