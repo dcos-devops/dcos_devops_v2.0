@@ -61,6 +61,7 @@
     <div id="main1" class="aaa2" style="width: 400px;height:300px; margin:10px;margin-bottom:60px; float: left;"></div>
 		<script type="text/javascript">
         var myChart = echarts.init(document.getElementById('main1'));
+
         var allocate_info = eval({{ allocate_info|safe }});
         var used_info = eval({{ used_info|safe }});
 
@@ -160,12 +161,14 @@
 			        {
 			            name:'DCOS',
 			            type:'line',
+
 			            //stack: '总量',
 			            data: used_info.dcos_cpu,
 			        },
 			        {
 			            name:'Yarn',
 			            type:'line',
+
 			            //stack: '总量',
 			            data: used_info.yarn_cpu,
 			        }

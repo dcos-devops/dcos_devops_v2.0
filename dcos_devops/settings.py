@@ -58,7 +58,8 @@ TEMPLATES = [
         'DIRS': [BASE_DIR + "/templates",
                  BASE_DIR + "/templates/alertinfos",
                  BASE_DIR + "/templates/resourceremain",
-                 BASE_DIR + "/templates/dcos_yarn", ],
+                 BASE_DIR + "/templates/dcos_yarn",
+                 BASE_DIR + "/templates/show_host", ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,11 +81,11 @@ WSGI_APPLICATION = 'dcos_devops.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'icinga_info',
+        'NAME': 'dnt_devops_cmdb',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': '20.26.25.145',
-        'PORT': '3366',
+        'HOST': 'localhost',
+        'PORT': '3306',
     }
 }
 

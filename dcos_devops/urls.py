@@ -18,6 +18,7 @@ from django.contrib import admin
 from alertinfos import views as alert_info_views
 from resourceremain import views as resource_remain_views
 from dcos_yarn import views as dcos_yarn_views
+from show_host import views as show_host_views
 
 urlpatterns = [
     url(r'^$', alert_info_views.index),
@@ -26,4 +27,9 @@ urlpatterns = [
     url(r'^get_service_time', alert_info_views.get_service_time),
     url(r'^cluster_resource', resource_remain_views.cluster_resource),
     url(r'^dcos_yarn', dcos_yarn_views.dcos_yarn),
+    url(r'^show_host', show_host_views.search_field),
+    url(r'^get_cluster', show_host_views.search_cluster),
+    url(r'^get_host_info', show_host_views.search_host),
+    url(r'^search_host_info', show_host_views.search_host_info),
+
 ]
