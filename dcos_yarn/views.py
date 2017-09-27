@@ -12,25 +12,16 @@ sys.setdefaultencoding('utf-8')
 
 
 def dcos_yarn(request):
-    dcos_cpu_mem_allocate_sql = "select * from dcos_yarn where type_info ='dcos' and time < now() and time > now() - 14m order by time desc;"
-    dcos_cpu_mem_allocate_col1, dcos_cpu_mem_allocate_col2, dcos_cpu_mem_allocate_col3 = "time_line", "allocate_cpu", "allocate_mem"
-    dcos_cpu_mem_allocate_info = get_influxdb_info(dcos_cpu_mem_allocate_sql, dcos_cpu_mem_allocate_col1, dcos_cpu_mem_allocate_col2, dcos_cpu_mem_allocate_col3)
 
-    yarn_cpu_mem_allocate_sql = "select * from dcos_yarn where type_info ='yarn' and time < now() and time > now() - 14m order by time desc;"
-    yarn_cpu_mem_allocate_col1, yarn_cpu_mem_allocate_col2, yarn_cpu_mem_allocate_col3 = "time_line", "allocate_cpu", "allocate_mem"
-    yarn_cpu_mem_allocate_info = get_influxdb_info(yarn_cpu_mem_allocate_sql, yarn_cpu_mem_allocate_col1, yarn_cpu_mem_allocate_col2, yarn_cpu_mem_allocate_col3)
-
-    dcos_cpu_mem_used_sql = "select * from dcos_yarn_used where type_info ='dcos' and time < now() and time > now() - 14m order by time desc;"
-    dcos_cpu_mem_used_col1, dcos_cpu_mem_used_col2, dcos_cpu_mem_used_col3 = "time_line", "used_cpu", "used_memory"
-    dcos_cpu_mem_used_info = get_influxdb_info(dcos_cpu_mem_used_sql, dcos_cpu_mem_used_col1, dcos_cpu_mem_used_col2, dcos_cpu_mem_used_col3)
-
-    yarn_cpu_mem_used_sql = "select * from dcos_yarn_used where type_info ='yarn' and time < now() and time > now() - 14m order by time desc;"
-    yarn_cpu_mem_used_col1, yarn_cpu_mem_used_col2, yarn_cpu_mem_used_col3 = "time_line", "used_cpu", "used_memory"
-    yarn_cpu_mem_used_info = get_influxdb_info(yarn_cpu_mem_used_sql, yarn_cpu_mem_used_col1, yarn_cpu_mem_used_col2, yarn_cpu_mem_used_col3)
-    return render_to_response("dcos_yarn.html", {"dcos_cpu_mem_allocate_info": dcos_cpu_mem_allocate_info,
-                                                 "yarn_cpu_mem_allocate_info": yarn_cpu_mem_allocate_info,
-                                                 "dcos_cpu_mem_used_info": dcos_cpu_mem_used_info,
-                                                 "yarn_cpu_mem_used_info": yarn_cpu_mem_used_info})
+    allocate_sql = "select * from dcos_yarn where type_info ='allocate' and time < now() and time > now() - 4m order by time desc limit 7;"
+    col1, col2, col3, col4, col5 = "time", "dcos_cpu", "dcos_memory","yarn_cpu","yarn_memory"
+    allocate_info = get_influxdb_info(allocate_sql, col1, col2, col3, col4, col5)
+    print allocate_info
+    used_sql = "select * from dcos_yarn where type_info ='used' and time < now() and time > now() - 4m order by time desc limit 7;"
+    col1, col2, col3, col4, col5 = "time", "dcos_cpu", "dcos_memory","yarn_cpu","yarn_memory"
+    used_info = get_influxdb_info(used_sql, col1, col2, col3, col4, col5)
+    print used_info
+    return render_to_response("dcos_yarn.html", {"allocate_info": allocate_info, "used_info": used_info})
 
 
 def query_influxdb(sql):
@@ -39,14 +30,22 @@ def query_influxdb(sql):
     return res
 
 
-def get_influxdb_info(sql, col1, col2, col3):
+def get_influxdb_info(sql, col1, col2, col3, col4, col5):
     influxdb_info = {}
+    print col1,col2,col3,col4,col5
     query_res = query_influxdb(sql)
-    influxdb_info[col1], influxdb_info[col2], influxdb_info[col3] = [], [], []
+    influxdb_info[col1], influxdb_info[col2], influxdb_info[col3], influxdb_info[col4], influxdb_info[col5] = [], [], [], [], []
     for i in query_res:
         for j in range(len(i)):
+            print i[j][col1],i[j][col2],i[j][col3],i[j][col4],i[j][col5]
             influxdb_info[col1].insert(0, (datetime.strptime((i[j]["time"][:19]), "%Y-%m-%dT%H:%M:%S") + timedelta(hours=8)).strftime("%H:%M:%S")[0:5])
-            influxdb_info[col2].insert(0, i[j][col2])
-            influxdb_info[col3].insert(0, round(i[j][col3]/1024, 2))
+            influxdb_info[col2].insert(0, round(i[j][col2],3))
+            if "used" in sql:
+                influxdb_info[col3].insert(0, i[j][col3])
+                influxdb_info[col5].insert(0, i[j][col5])
+            else:
+                influxdb_info[col3].insert(0, i[j][col3])
+                influxdb_info[col5].insert(0, i[j][col5])
+            influxdb_info[col4].insert(0, i[j][col4])
     json_influxdb_info = json.dumps(influxdb_info)
     return json_influxdb_info
