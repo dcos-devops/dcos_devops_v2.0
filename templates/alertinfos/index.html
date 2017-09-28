@@ -41,7 +41,7 @@
         var level = $("#level").val();
         $.get("/get_ip", {'level': level}, function (ret) {
             var obj = document.getElementById("ip");
-            obj.options.length = 0;
+            obj.options.length = 1;
             var ip_pool = ret.ip;
             for(var i = 1; i < ip_pool.length + 1; i++){
                 var option = $("<option>").val(ip_pool[i]).text(ip_pool[i]);
