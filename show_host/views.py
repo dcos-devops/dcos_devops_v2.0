@@ -31,10 +31,18 @@ def search_host(request):
     host_info = []
     cluster = request.GET.get("cluster")
     field = request.GET.get("field")
-    cluster_id = Cluster.objects.filter(name=cluster)[0].id
-    host_query_res = Host.objects.filter(cluster_id=cluster_id)
-    for item in host_query_res:
-        host_info.append({"field": field, "cluster": cluster, "name": item.name, "ip": item.ip, "comp_name": item.comp_name, "comp_port": item.comp_port})
+    if cluster != "--- 请选择集群约束 ---" and field != "--- 请选择生产域 ---":
+        cluster_id = Cluster.objects.filter(name=cluster)[0].id
+        host_query_res = Host.objects.filter(cluster_id=cluster_id)
+        for item in host_query_res:
+            host_info.append({"field": field, "cluster": cluster, "name": item.name, "ip": item.ip, "comp_name": item.comp_name, "comp_port": item.comp_port})
+    elif cluster == "--- 请选择集群约束 ---" and field != "--- 请选择生产域 ---":
+        field_id = Field.objects.filter(name=field)[0].id
+        cluster_objs = Cluster.objects.filter(field_id=field_id)
+        for item in cluster_objs:
+            host_info_res = [host_obj for host_obj in Host.objects.filter(cluster_id=item.id)]
+            for info in host_info_res:
+                host_info.append({"field": field, "cluster": item.name, "name": info.name, "ip": info.ip, "comp_name": info.comp_name, "comp_port": info.comp_port})
     host_info_res = {"host_info": host_info}
     return HttpResponse(json.dumps(host_info_res), content_type='application/json')
 
@@ -51,6 +59,16 @@ def search_host_info(request):
             cluster_id=cluster_id)
         for item in search_info_res:
             host_info.append({"field": field, "cluster": cluster, "name": item.name, "ip": item.ip, "comp_name": item.comp_name, "comp_port": item.comp_port})
+    elif cluster == "--- 请选择集群约束 ---" and field != "--- 请选择生产域 ---":
+        field_id3 = Field.objects.filter(name=field)[0].id
+        search_info = request.GET.get("search_info")
+        cluster_objs = Cluster.objects.filter(field_id=field_id3)
+        for item in cluster_objs:
+            search_info_res = [host_obj for host_obj in Host.objects.filter(
+                Q(name__contains=search_info) | Q(ip__contains=search_info) | Q(comp_name__contains=search_info) | Q(
+                    comp_port__contains=search_info), cluster_id=item.id)]
+            for info in search_info_res:
+                host_info.append({"field": field, "cluster": item.name, "name": info.name, "ip": info.ip, "comp_name": info.comp_name, "comp_port": info.comp_port})
     else:
         search_info = request.GET.get("search_info")
         search_info_res = Host.objects.filter(
