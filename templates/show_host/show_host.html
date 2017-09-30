@@ -65,6 +65,30 @@
     </script>
     <script>
     $(document).ready(function(){
+      $("#fields").change(function(){
+        var cluster = $("#clusters").val();
+        var field = $("#fields").val();
+        $.get("/get_host_info", {'cluster': cluster, "field": field}, function (ret) {
+            $('table tbody').empty();
+            var host_info = ret.host_info;
+            for(var i = 0; i < host_info.length + 1; i++) {
+                var item = "<tr>" +
+                    "<td>" + host_info[i]["field"] + "</td>" +
+                    "<td>" + host_info[i]["cluster"] + "</td>" +
+                    "<td>" + host_info[i]["name"] + "</td>" +
+                    "<td>" + host_info[i]["ip"] + "</td>" +
+                    "<td>" + host_info[i]["comp_name"] + "</td>" +
+                    "<td>" + host_info[i]["comp_port"] + "</td>" +
+                    "</tr>";
+                $(".table").append(item)
+            }
+        });
+      });
+    });
+    </script>
+
+    <script>
+    $(document).ready(function(){
       $("#clusters").change(function(){
         var cluster = $("#clusters").val();
         var field = $("#fields").val();
