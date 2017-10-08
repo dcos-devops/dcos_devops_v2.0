@@ -6,8 +6,10 @@ from dcos_devops.models import Host, Field, Cluster
 from django.http import HttpResponse
 import json
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 
+#@login_required(login_url="/login/")
 def search_field(request):
     fields = []
     fields_query_res = Field.objects.all()
@@ -32,7 +34,8 @@ def search_host(request):
     cluster = request.GET.get("cluster")
     field = request.GET.get("field")
     if cluster != "--- 请选择集群约束 ---" and field != "--- 请选择生产域 ---":
-        cluster_id = Cluster.objects.filter(name=cluster)[0].id
+        field_id = Field.objects.filter(name=field)[0].id
+        cluster_id = Cluster.objects.filter(name=cluster, field_id=field_id)[0].id
         host_query_res = Host.objects.filter(cluster_id=cluster_id)
         for item in host_query_res:
             host_info.append({"field": field, "cluster": cluster, "name": item.name, "ip": item.ip, "comp_name": item.comp_name, "comp_port": item.comp_port})
