@@ -15,13 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url,include
 from django.contrib import admin
+from . import view as login_views
 from alertinfos import views as alert_info_views
 from resourceremain import views as resource_remain_views
 from dcos_yarn import views as dcos_yarn_views
 from show_host import views as show_host_views
 
 urlpatterns = [
-    url(r'^$', alert_info_views.index),
+    url(r'^$', login_views.hello),
+    url(r'^login', login_views.login),
+    url(r'^index', alert_info_views.index),
     url(r'^get_ip', alert_info_views.get_ip),
     url(r'^get_rest_information', alert_info_views.get_table_information),
     url(r'^get_service_time', alert_info_views.get_service_time),
@@ -31,5 +34,6 @@ urlpatterns = [
     url(r'^get_cluster', show_host_views.search_cluster),
     url(r'^get_host_info', show_host_views.search_host),
     url(r'^search_host_info', show_host_views.search_host_info),
+    url(r'^logout', login_views.logout),
 
 ]

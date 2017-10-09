@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.shortcuts import render, render_to_response
+from django.http import HttpResponse,HttpResponseRedirect
 import requests
 import socket
 import json
@@ -25,28 +26,32 @@ def get_mesos_leader(mesos_master_nodes):
 
 
 def cluster_resource(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        zj01_name, mesos_master_name, new_x86_name = "中心化测试环境", "营业厅测试环境", "新X86测试环境"
+        zj01_mesos_ips = ["20.26.25.11:5050", "20.26.25.12:5050", "20.26.25.13:5050"]
+        mesos_master_ips = ["20.26.28.22:5050", "20.26.28.23:5050", "20.26.28.24:5050"]
+        new_x86_name_ips = ["20.26.28.20:5050", "20.26.28.21:5050", "20.26.33.50:5050"]
+        zj01_mesos_leader = get_mesos_leader(zj01_mesos_ips) + "master/state"
+        mesos_master_leader = get_mesos_leader(mesos_master_ips) + "master/state"
+        new_x86_leader = get_mesos_leader(new_x86_name_ips) + "master/state"
 
-    zj01_name, mesos_master_name, new_x86_name = "中心化测试环境", "营业厅测试环境", "新X86测试环境"
-    zj01_mesos_ips = ["20.26.25.11:5050", "20.26.25.12:5050", "20.26.25.13:5050"]
-    mesos_master_ips = ["20.26.28.22:5050", "20.26.28.23:5050", "20.26.28.24:5050"]
-    new_x86_name_ips = ["20.26.28.20:5050", "20.26.28.21:5050", "20.26.33.50:5050"]
-    zj01_mesos_leader = get_mesos_leader(zj01_mesos_ips) + "master/state"
-    mesos_master_leader = get_mesos_leader(mesos_master_ips) + "master/state"
-    new_x86_leader = get_mesos_leader(new_x86_name_ips) + "master/state"
+        zj01_resource = get_cluster_resource(zj01_mesos_leader)
+        mesos_master_resource = get_cluster_resource(mesos_master_leader)
+        new_x86_resource = get_cluster_resource(new_x86_leader)
 
-    zj01_resource = get_cluster_resource(zj01_mesos_leader)
-    mesos_master_resource = get_cluster_resource(mesos_master_leader)
-    new_x86_resource = get_cluster_resource(new_x86_leader)
-
-    return render_to_response('get_cluster_resource.html', {"zj01_name": zj01_name,
-                                                            "zj01_resource": zj01_resource,
-                                                            "zj01_mesos_ips": ",".join(zj01_mesos_ips),
-                                                            "mesos_master_name": mesos_master_name,
-                                                            "mesos_master_resource": mesos_master_resource,
-                                                            "mesos_master_ips": ",".join(mesos_master_ips),
-                                                            "new_x86_name": new_x86_name,
-                                                            "new_x86_resource": new_x86_resource,
-                                                            "new_x86_name_ips": ",".join(new_x86_name_ips)})
+        return render_to_response('get_cluster_resource.html', {"zj01_name": zj01_name,
+                                                                "zj01_resource": zj01_resource,
+                                                                "zj01_mesos_ips": ",".join(zj01_mesos_ips),
+                                                                "mesos_master_name": mesos_master_name,
+                                                                "mesos_master_resource": mesos_master_resource,
+                                                                "mesos_master_ips": ",".join(mesos_master_ips),
+                                                                "new_x86_name": new_x86_name,
+                                                                "new_x86_resource": new_x86_resource,
+                                                                "new_x86_name_ips": ",".join(new_x86_name_ips)})
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
 
 
 def get_cluster_resource(url):

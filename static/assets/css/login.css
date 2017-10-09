@@ -1,0 +1,74 @@
+/*-- login --*/
+.login-logo {
+  margin: 0;
+  text-align: center;
+  color: #fff;
+  font-size: 18px;
+  text-transform: uppercase;
+  display: inline-block;
+  width: 100%;
+  padding: 50px 0;
+}
+h2.form-heading {
+  margin: 0;
+  text-align: center;
+  color:#000;
+  font-size: 18px;
+  text-transform: uppercase;
+  display: inline-block;
+  width: 100%;
+}
+.app-cam {
+  width:22%;
+  margin:3em auto auto auto;
+}
+.app-cam input[type="text"] {
+  width: 100%;
+  padding: 15px;
+  color: #999;
+  font-size: 0.85em;
+  outline: none;
+  font-weight: 300;
+  border: none;
+  background:#222224;
+  margin:0 0 1em 0;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+.app-cam input[type="password"] {
+  width: 100%;
+  padding: 15px;
+  color:#999;
+  font-size: 0.85em;
+  outline: none;
+  font-weight: 300;
+  border: none;
+  background:#222224;
+  margin:0 0 1em 0;
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+}
+.app-cam input[type="submit"], .btn-success1{
+  font-size: 14px;
+  font-weight: 300 !important;
+  color: #fff;
+  cursor: pointer;
+  outline: none;
+  padding: 10px 15px;
+  width: 100%;
+  border: none;
+  background: rgb(6, 217, 149);
+  border-radius: 2px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  -o-border-radius: 2px;
+  text-transform: uppercase;
+}
+.app-cam input[type="submit"]:hover, .btn-success1:hover{
+  background:rgb(1, 200, 136);
+  color:#fff !important;
+}

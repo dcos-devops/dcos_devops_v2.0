@@ -116,3 +116,11 @@ class User(models.Model):
     class Meta:
         managed = False
         db_table = 'user'
+
+
+class Loginuser(models.Model):
+    username = models.CharField(max_length=50)
+    password = models.CharField(max_length=50)
+
+    def __unicode__(self):
+        return self.username
