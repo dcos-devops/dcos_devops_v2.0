@@ -34,8 +34,8 @@ def del_log(hostname, port, username, password, loginfo):
     stdin, stdout, stderr = s.exec_command (execmd)
     stdin.write("Y")  # Generally speaking, the first connection, need a simple interaction.
     dd = stdout.read()
-    print dd
     s.close()
+    return dd
 
 def empty_log(hostname, port, username, password, loginfo):
     paramiko.util.log_to_file("paramiko.log")
@@ -50,8 +50,8 @@ def empty_log(hostname, port, username, password, loginfo):
     stdin, stdout, stderr = s.exec_command (execmd)
     stdin.write("Y")  # Generally speaking, the first connection, need a simple interaction.
     dd = stdout.read()
-    print dd
     s.close()
+    return dd
     
 def test():
     hostname = '20.26.33.32'

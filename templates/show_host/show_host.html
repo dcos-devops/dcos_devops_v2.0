@@ -146,8 +146,35 @@
     </script>
 
 <script>
+function delfile(obj){
+    var r=confirm("Press a button!");
+    if (r==true)
+    {
+        ip=$('#showlogip').html()
+        filename=$(obj).parents('tr').find('.logfile').html()
+        $.get("/del_host_logfile", {"hostip": hostip,"filename":filename}, function (ret) {
+            var delres = ret.delres
+            console.log(delres)
+            console.log(filename)
+        });
+    }
+}
+
+function empty(obj){
+    var r=confirm("Press a button!");
+    if (r==true)
+    {
+        ip=$('#showlogip').html()
+        filename=$(obj).parents('tr').find('.logfile').html()
+        $.get("/empty_host_logfile", {"hostip": hostip,"filename":filename}, function (ret) {
+            var empres = ret.empres
+            console.log(empres)
+            console.log(filename)
+        });
+    }
+}
+
 function showhostlogs(hostip){
-    var modallabel='显示'+hostip+'日志文件';
     context=
     '<table class="table table-bordered table-striped">'+
     '<thead>'+
@@ -169,20 +196,19 @@ function showhostlogs(hostip){
         for (var i = 0; i < file_infos.length ; i++) {
             context += "<tr>" +
                 "<td>" + file_infos[i]["size"] + "</td>" +
-                "<td>" + file_infos[i]["filename"] + "</td>" +
-                "<td><button onclick="+'"'+"delfile()"+'"'+">删除</button><button onclick="+'"'+"empty()"+'"'+">写空</button></td>"
+                "<td class='logfile'>" + file_infos[i]["filename"] + "</td>" +
+                "<td><button onclick="+'"'+"delfile(this)"+'"'+">删除</button><button onclick="+'"'+"empty(this)"+'"'+">写空</button></td>"
                 "</tr>";
         }
 
         context+="</tbody>"
-
+        context+="</table>"
+        $("#showlogip").text(hostip);
+        $("#showlogsbody").html(context);
+        $('#showlogsmodal').modal('show');
     });
-
-    context+="</table>"
-    $("#showlogslabel").text(modallabel);
-    $("#showlogsbody").html(context);
-    $('#showlogsmodal').modal('show');
 }
+
 function clearlogs(obj) {
     var modallabel='清理主机文件';
     var modalbody='table'

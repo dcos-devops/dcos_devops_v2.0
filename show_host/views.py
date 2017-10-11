@@ -8,6 +8,38 @@ import json
 from django.db.models import Q
 import log_operation
 
+def emplog(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        filename = request.GET.get("filename")
+        # hostip = request.GET.get("hostip")
+        hostip = '20.26.33.32'
+        password = '20172Epc'
+        port = 22
+        username = 'root'
+        text=log_operation.empty_log(hostip, port, username, password, filename)
+        empres = {"empres": text}
+        return HttpResponse(json.dumps(empres), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
+def dellog(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        filename = request.GET.get("filename")
+        # hostip = request.GET.get("hostip")
+        hostip = '20.26.33.32'
+        password = '20172Epc'
+        port = 22
+        username = 'root'
+        text=log_operation.del_log(hostip, port, username, password, filename)
+        delres = {"delres": text}
+        return HttpResponse(json.dumps(delres), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
 def showlog(request):
     is_login = request.session.get('IS_LOGIN', False)
     if is_login:
