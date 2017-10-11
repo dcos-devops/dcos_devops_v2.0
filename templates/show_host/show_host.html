@@ -26,10 +26,12 @@
             <br>
             <br>
         </div>
+        <p>选中<span id="numofselect">0</span>个<a href='#' onclick="clearlogs()">action</a></p>
         <div id="table">
             <table class="table table-bordered table-striped" id="tb">
                 <thead id="a1">
                     <tr>
+                        <td><a href="#" onclick="checkall()">全选</a><span>||</span><a href="#" onclick="reverse()">反选</a></td>
                         <td><b>生产域</b></td>
                         <td><b>集群约束</b></td>
                         <td><b>主机名</b></td>
@@ -59,6 +61,7 @@
                 var option = $("<option>").val(clusters[i]).text(clusters[i]);
                 $(".selector2").append(option)
             }
+            $("#numofselect").html(0)
         })
       });
     });
@@ -73,6 +76,7 @@
             var host_info = ret.host_info;
             for(var i = 0; i < host_info.length + 1; i++) {
                 var item = "<tr>" +
+                    "<td><input type='checkbox' class='select' onclick='changenum()'></td>" +
                     "<td>" + host_info[i]["field"] + "</td>" +
                     "<td>" + host_info[i]["cluster"] + "</td>" +
                     "<td>" + host_info[i]["name"] + "</td>" +
@@ -82,6 +86,7 @@
                     "</tr>";
                 $(".table").append(item)
             }
+            $("#numofselect").html(0)
         });
       });
     });
@@ -97,6 +102,7 @@
             var host_info = ret.host_info;
             for(var i = 0; i < host_info.length + 1; i++) {
                 var item = "<tr>" +
+                    "<td><input type='checkbox' class='select' onclick='changenum()'></td>" +
                     "<td>" + host_info[i]["field"] + "</td>" +
                     "<td>" + host_info[i]["cluster"] + "</td>" +
                     "<td>" + host_info[i]["name"] + "</td>" +
@@ -106,6 +112,7 @@
                     "</tr>";
                 $(".table").append(item)
             }
+            $("#numofselect").html(0)
         });
       });
     });
@@ -122,6 +129,7 @@
                     var host_info = ret.host_info;
                     for (var i = 0; i < host_info.length + 1; i++) {
                         var item = "<tr>" +
+                            "<td><input type='checkbox' class='select' onclick='changenum()'></td>" +
                             "<td>" + host_info[i]["field"] + "</td>" +
                             "<td>" + host_info[i]["cluster"] + "</td>" +
                             "<td>" + host_info[i]["name"] + "</td>" +
@@ -131,9 +139,89 @@
                             "</tr>";
                         $(".table").append(item)
                     }
+                    $("#numofselect").html(0)
                 });
             })
         })
     </script>
+
+<script>
+function showhostlogs(hostip){
+    alert(hostip)
+}
+function clearlogs(obj) {
+    var modallabel='清理主机文件';
+    var modalbody='table'
+    var ho=$(".select");
+    numofselect=0
+    hostips=new Array();
+    hostnames=new Array();
+    for(var i=0;i<ho.length;i++){
+        if (ho[i].checked==true){
+            hostip=$(ho[i].parentNode.parentNode.children[4]).html()
+            hostips[numofselect]=hostip
+            hostname=$(ho[i].parentNode.parentNode.children[3]).html()
+            hostnames[numofselect]=hostname
+            numofselect=numofselect+1
+        }
+    }
+    context=
+    '<table class="table table-bordered table-striped">'+
+    '<thead>'+
+        '<tr>'+
+            '<td><b>主机名</b></td>'+
+            '<td><b>主机IP</b></td>'+
+            '<td>清理主机日志文件</td>'+
+        '</tr>'+
+    '</thead>'+
+    '<tbody>'
+    for(var i=0;i<hostips.length;i++){
+        context+=
+        '<tr>'+
+            '<td>'+hostnames[i]+'</td>'+
+            '<td>'+hostips[i]+'</td>'+
+            "<td><a href='#' onclick='showhostlogs("+'"'+hostips[i]+'"'+")'>show logs</a></td>"+
+        '</tr>'
+    }
+    // console.log(context)
+    context+=
+        '</tbody>'+
+    '</table>'
+    modalbody=context
+    $("#clearlogslabel").text(modallabel);
+    $("#clearlogsbody").html(modalbody);
+    $('#clearlogsmodal').modal('show');
+}
+function changenum(){
+    var ho=$(".select");
+    numofselect=0
+    for(var i=0;i<ho.length;i++){
+        if (ho[i].checked==true){
+            numofselect=numofselect+1
+        }
+    }
+    $("#numofselect").html(numofselect)
+}
+function checkall(){
+    var ho=$(".select");
+    numofselect=0
+    for(var i=0;i<ho.length;i++){
+        ho[i].checked=true;
+        numofselect=numofselect+1
+    }
+    $("#numofselect").html(numofselect)
+}
+function reverse(){
+    var ho=$(".select");
+    numofselect=0
+    for(var i=0;i<ho.length;i++){
+        ho[i].checked=!ho[i].checked;
+        if (ho[i].checked==true){
+            numofselect=numofselect+1
+        }
+    }
+    $("#numofselect").html(numofselect)
+}
+</script>
 </div>
 {% endblock %}
