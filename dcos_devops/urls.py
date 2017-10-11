@@ -34,6 +34,7 @@ urlpatterns = [
     url(r'^get_cluster', show_host_views.search_cluster),
     url(r'^get_host_info', show_host_views.search_host),
     url(r'^search_host_info', show_host_views.search_host_info),
+    url(r'^search_host_logfile', show_host_views.showlog),
     url(r'^logout', login_views.logout),
 
 ]

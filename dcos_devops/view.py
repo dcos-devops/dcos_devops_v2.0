@@ -44,6 +44,11 @@ def login(request):
                 return render(request, 'login.html')
 
 def logout(request):
-    del request.session['IS_LOGIN']
-    del request.session['username']
-    return render(request, 'login.html')
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        del request.session['IS_LOGIN']
+        del request.session['username']
+        return render(request, 'login.html')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')

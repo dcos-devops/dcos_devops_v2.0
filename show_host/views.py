@@ -6,6 +6,26 @@ from dcos_devops.models import Host, Field, Cluster
 from django.http import HttpResponse,HttpResponseRedirect
 import json
 from django.db.models import Q
+import log_operation
+
+def showlog(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        # hostip = request.GET.get("hostip")
+        hostip = '20.26.33.32'
+        password = '20172Epc'
+        port = 22
+        username = 'root'
+        execmd = "du -m /data/logs/*/*  | sort -nr | head -n 10"
+        logfiles=log_operation.show_log(hostip, port, username, password, execmd)
+        file_infos=[]
+        for item in logfiles:
+            file_infos.append({"size": item['size'],"filename": item['filename']})
+        file_info_res = {"file_infos": file_infos}
+        return HttpResponse(json.dumps(file_info_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
 
 
 def search_field(request):

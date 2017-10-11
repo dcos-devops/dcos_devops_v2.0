@@ -147,7 +147,41 @@
 
 <script>
 function showhostlogs(hostip){
-    alert(hostip)
+    var modallabel='显示'+hostip+'日志文件';
+    context=
+    '<table class="table table-bordered table-striped">'+
+    '<thead>'+
+        '<tr>'+
+            '<td><b>文件大小</b></td>'+
+            '<td><b>文件位置</b></td>'+
+            '<td>操作</td>'+
+        '</tr>'+
+    '</thead>'+
+    '<tbody>'
+
+    $.get("/search_host_logfile", {"hostip": hostip}, function (ret) {
+        $("#showlogsbody").empty();
+        var file_infos = ret.file_infos;
+
+        console.log(file_infos)
+
+
+        for (var i = 0; i < file_infos.length ; i++) {
+            context += "<tr>" +
+                "<td>" + file_infos[i]["size"] + "</td>" +
+                "<td>" + file_infos[i]["filename"] + "</td>" +
+                "<td><button onclick="+'"'+"delfile()"+'"'+">删除</button><button onclick="+'"'+"empty()"+'"'+">写空</button></td>"
+                "</tr>";
+        }
+
+        context+="</tbody>"
+
+    });
+
+    context+="</table>"
+    $("#showlogslabel").text(modallabel);
+    $("#showlogsbody").html(context);
+    $('#showlogsmodal').modal('show');
 }
 function clearlogs(obj) {
     var modallabel='清理主机文件';
