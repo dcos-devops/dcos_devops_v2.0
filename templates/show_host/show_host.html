@@ -146,30 +146,46 @@
     </script>
 
 <script>
+
+function flashloglist(obj){
+    line=$(obj).parents('tr')
+    line.remove()
+}
+
 function delfile(obj){
-    var r=confirm("Press a button!");
+    ip=$('#showlogip').html()
+    filename=$(obj).parents('tr').find('.logfile').html()
+    var r=confirm("确定要删除日志"+filename+"?");
     if (r==true)
     {
-        ip=$('#showlogip').html()
-        filename=$(obj).parents('tr').find('.logfile').html()
         $.get("/del_host_logfile", {"hostip": hostip,"filename":filename}, function (ret) {
             var delres = ret.delres
             console.log(delres)
-            console.log(filename)
+            if(delres==''){
+                alert('删除了'+filename)
+                flashloglist(obj)
+            }
         });
     }
 }
 
 function empty(obj){
-    var r=confirm("Press a button!");
+    ip=$('#showlogip').html()
+    filename=$(obj).parents('tr').find('.logfile').html()
+    var r=confirm("确定要写空日志"+filename+"?");
     if (r==true)
     {
-        ip=$('#showlogip').html()
-        filename=$(obj).parents('tr').find('.logfile').html()
         $.get("/empty_host_logfile", {"hostip": hostip,"filename":filename}, function (ret) {
             var empres = ret.empres
             console.log(empres)
             console.log(filename)
+            if(empres==''){
+                alert('写空了'+filename)
+                flashloglist(obj)
+            }
+            else{
+                alert(empres)
+            }
         });
     }
 }
@@ -197,7 +213,8 @@ function showhostlogs(hostip){
             context += "<tr>" +
                 "<td>" + file_infos[i]["size"] + "</td>" +
                 "<td class='logfile'>" + file_infos[i]["filename"] + "</td>" +
-                "<td><button onclick="+'"'+"delfile(this)"+'"'+">删除</button><button onclick="+'"'+"empty(this)"+'"'+">写空</button></td>"
+                '<td><div class="btn-group">'+
+                '<button class="btn btn-danger" onclick="delfile(this)">删除</button><button class="btn btn-warning" onclick="empty(this)">写空</button>'+
                 "</tr>";
         }
 

@@ -44,6 +44,8 @@ def empty_log(hostname, port, username, password, loginfo):
 
     #Todo
     #判断选择的问题是否合规,是不是.log结尾
+    if loginfo[-4:]!='.log':
+        return 'this is not a logfile end with .log'
 
     execmd = "> %s" % loginfo
     s.connect(hostname=hostname, port=port, username=username, password=password)
