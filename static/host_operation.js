@@ -34,8 +34,7 @@ function extractip(){
     $('#clearlogsmodal').modal('show');
 }
 
-function rmdocker(dockerid,obj){
-    ip=$('#showlogip').html()
+function rmdocker(dockerid){
     var r=confirm("确定要删除容器"+dockerid+"?");
     if (r==true)
     {
@@ -49,14 +48,28 @@ function rmdocker(dockerid,obj){
     }
 }
 
+function cleanall(hostip){
+    var r=confirm("确定要删除所有退出容器?");
+    if (r==true)
+    {
+        $.get("/del_host_dockers", {"hostip": hostip}, function (ret) {
+            var delres = ret.delres
+            alert('删除了:\n'+delres)
+            showexitdocker(hostip)
+        });
+    }
+}
+
 function showexitdocker(hostip){
     context=
     '<table class="table table-bordered table-striped">'+
     '<thead>'+
         '<tr>'+
             '<td><b>ID</b></td>'+
-            '<td><b>NAME</b></td>'+
-            '<td>操作</td>'+
+            '<td><b>IMAGE</b></td>'+
+            '<td><b>CREATED</b></td>'+
+            '<td><b>STATUS</b></td>'+
+            '<td>操作<button onclick="cleanall('+"'"+hostip+"'"+')">全部清理</button></td>'+
         '</tr>'+
     '</thead>'+
     '<tbody>'
@@ -71,7 +84,9 @@ function showexitdocker(hostip){
         for (var i = 0; i < docker_infos.length ; i++) {
             context += "<tr>" +
                 "<td class='dockerid'>" + docker_infos[i]["ID"] + "</td>" +
-                "<td>" + docker_infos[i]["NAME"] + "</td>" +
+                "<td>" + docker_infos[i]["IMAGE"] + "</td>" +
+                "<td>" + docker_infos[i]["CREATED"] + "</td>" +
+                "<td>" + docker_infos[i]["STATUS"] + "</td>" +
                 '<td><button class="btn btn-danger" onclick="rmdocker('+"'"+docker_infos[i]["ID"]+"'"+')">删除容器</button></td>'+
                 "</tr>";
         }

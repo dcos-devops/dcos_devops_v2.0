@@ -9,6 +9,21 @@ from django.db.models import Q
 import log_operation
 import docker_operation
 
+def delexitdockers(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        # hostip = request.GET.get("hostip")
+        hostip = '20.26.33.32'
+        password = '20172Epc'
+        port = 22
+        username = 'root'
+        delres=docker_operation.del_dockers(hostip, port, username, password)
+        docker_info_res = {"delres": delres}
+        return HttpResponse(json.dumps(docker_info_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
 def delexitdocker(request):
     is_login = request.session.get('IS_LOGIN', False)
     if is_login:
@@ -36,7 +51,7 @@ def showexitdocker(request):
         dockers=docker_operation.show_exit_docker(hostip, port, username, password)
         docker_infos=[]
         for item in dockers:
-            docker_infos.append({"ID": item['ID'],"NAME": item['NAME']})
+            docker_infos.append({"ID": item['ID'],"IMAGE": item['IMAGE'],"CREATED": item['CREATED'],"STATUS": item['STATUS']})
         docker_info_res = {"docker_infos": docker_infos}
         return HttpResponse(json.dumps(docker_info_res), content_type='application/json')
     else:
