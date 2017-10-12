@@ -1,3 +1,39 @@
+function extractip(){
+    var modallabel='主机ip';
+    var modalbody='table'
+    var ho=$(".select");
+    hostips=new Array();
+    hostnames=new Array();
+    for(var i=0;i<ho.length;i++){
+        if (ho[i].checked==true){
+            hostip=$(ho[i].parentNode.parentNode.children[4]).html()
+            hostips[i]=hostip
+        }
+    }
+    context=
+    '<table class="table table-bordered table-striped">'+
+    '<thead>'+
+        '<tr>'+
+            '<td><b>主机IP</b></td>'+
+        '</tr>'+
+    '</thead>'+
+    '<tbody>'
+    for(var i=0;i<hostips.length;i++){
+        context+=
+        '<tr>'+
+            '<td>'+hostips[i]+'</td>'+
+        '</tr>'
+    }
+    // console.log(context)
+    context+=
+        '</tbody>'+
+    '</table>'
+    modalbody=context
+    $("#clearlogslabel").text(modallabel);
+    $("#clearlogsbody").html(modalbody);
+    $('#clearlogsmodal').modal('show');
+}
+
 function rmdocker(dockerid,obj){
     ip=$('#showlogip').html()
     var r=confirm("确定要删除容器"+dockerid+"?");
@@ -127,7 +163,7 @@ function showhostlogs(hostip){
     });
 }
 
-function clearlogs(obj) {
+function cleanhosts(obj) {
     var modallabel='清理主机文件';
     var modalbody='table'
     var ho=$(".select");
