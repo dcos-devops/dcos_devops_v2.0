@@ -48,11 +48,12 @@ function rmdocker(dockerid){
     }
 }
 
-function cleanall(hostip){
-    var r=confirm("确定要删除所有退出容器?");
+function cleanall(){
+    hostip=$("#showdockerip").html()
+    var r=confirm("确定要删除"+hostip+"所有退出容器?");
     if (r==true)
     {
-        $.get("/del_host_dockers", {"hostip": hostip}, function (ret) {
+        $.get("/clean_exit_dockers", {"hostip": hostip}, function (ret) {
             var delres = ret.delres
             alert('删除了:\n'+delres)
             showexitdocker(hostip)
@@ -69,13 +70,13 @@ function showexitdocker(hostip){
             '<td><b>IMAGE</b></td>'+
             '<td><b>CREATED</b></td>'+
             '<td><b>STATUS</b></td>'+
-            '<td>操作<button onclick="cleanall('+"'"+hostip+"'"+')">全部清理</button></td>'+
+            '<td>操作</td>'+
         '</tr>'+
     '</thead>'+
     '<tbody>'
 
     $.get("/search_host_exitdocker", {"hostip": hostip}, function (ret) {
-        $("#showlogsbody").empty();
+        $("#showdockerbody").empty();
         var docker_infos = ret.docker_infos;
 
         console.log(docker_infos)
@@ -93,9 +94,9 @@ function showexitdocker(hostip){
 
         context+="</tbody>"
         context+="</table>"
-        $("#showlogip").text(hostip);
-        $("#showlogsbody").html(context);
-        $('#showlogsmodal').modal('show');
+        $("#showdockerip").text(hostip);
+        $("#showdockerbody").html(context);
+        $('#showdockermodal').modal('show');
     });
 }
 

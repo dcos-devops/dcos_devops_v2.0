@@ -26,7 +26,14 @@
             <br>
             <br>
         </div>
-        <p>选中<span id="numofselect">0</span>个<a href='#' onclick="cleanhosts()">清理主机</a><span>||</span><a href='#' onclick='extractip()'>提取主机ip</a></p>
+        <div>
+            <a href='#' onclick='cleanhosts()' style="margin:0 10px 0 0">清理主机</a>
+            <a href='#' onclick='extractip()' style="margin:0 10px 0 0">提取主机ip</a>
+            <a href='#' onclick='addhost()' style="margin:0 10px 0 0">新增主机</a>
+            <a href='#' onclick='delhost()' style="margin:0 10px 0 0">删除主机</a>
+        </div>
+        <p>选中<span id="numofselect">0</span>个</p>
+
         <div id="table">
             <table class="table table-bordered table-striped" id="tb">
                 <thead id="a1">

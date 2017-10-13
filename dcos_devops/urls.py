@@ -39,7 +39,7 @@ urlpatterns = [
     url(r'^search_host_logfile', show_host_views.showlog),
     url(r'^search_host_exitdocker', show_host_views.showexitdocker),
     url(r'^del_host_docker', show_host_views.delexitdocker),
-    url(r'^del_host_dockers', show_host_views.delexitdockers),
+    url(r'clean_exit_dockers', show_host_views.delexitdockers),
     url(r'^logout', login_views.logout),
 
 ]
