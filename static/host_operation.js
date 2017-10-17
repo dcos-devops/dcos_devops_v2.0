@@ -1,31 +1,113 @@
 function addhost(){
         context='<ul>'+
-                        '<li>主机名:<input type="text" ></li>'+
-                        '<li>主机IP:<input type="password" ></li>'
-        context += '<li>归属域:'+'<select id="fields" name="fields" class="form-control">'+
-                        '<option >--- 请选择生产域 ---</option>' +
-                            '<option>内网(DCOS)</option>' +
-                            '<option>DMZ</option>' +
-                            '<option>DCOS 3.0</option>' +
-                            '<option>内网(非DCOS)</option>' +
+                        '<li>主机名:<input type="text" id="addhostname"></li>'+
+                        '<li>主机IP:<input type="text" id="addhostip" onchange="checkip()"></li>'
+        context += '<li>归属域:'+'<select id="addfields" class="form-control" onchange="getclusters()">'+
                    '</select>' + '</li>'
-        context += '<li>归属约束:'+'<select id="fields" name="fields" class="form-control">'+
-                        '<option >--- 请选择集群约束 ---</option>' +
-                            '<option>无</option>' +
-                            '<option>dcos:center-n</option>' +
-                            '<option>dcos:center-d</option>' +
-                            '<option>dcos:LITTLEAPP</option>' +
-                            '<option>centering:sd</option>' +
-                            '<option>centering:sq</option>' +
-                            '<option>dcos:XYL-DISHI</option>' +
-                            '<option>dcos:DMZ-XYL</option>' +
+        context += '<li>归属约束:'+'<select id="addclusters" class="form-control">'+
                    '</select>' + '</li>'
+        context += '<li>组件:'+'<select id="addcomponents" class="form-control">'+
+                   '</select>' + '</li>'
+        context += '<li>端口:<input type="text" id="addhostport"></li>'
         context +='</ul>'
+        getfiels()
+        getcomponent()
         var modalbody='table'
         modalbody=context
-        console.log(context)
         $("#addhostbody").html(modalbody);
         $('#addhostmodal').modal('show');
+}
+
+function checkip(){
+    addhostip=$('#addhostip').val()
+    var exp1=/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    var reg1=addhostip.match(exp1);
+    if(reg1==null){
+        alert('IP地址不合法！')
+        return
+    }
+    $.get("/check_ip",{'ip': addhostip}, function (ret) {
+            var checkres = ret.checkres;
+            if (checkres.status==1){
+                name=checkres.name
+                field=checkres.field
+                cluster=checkres.cluster
+                addhostname=$('#addhostname').val(name)
+                addfields=$('#addfields').val(field)
+                getclusters()
+            }
+    })
+}
+
+function checkandaddhost(){
+    addhostname=$('#addhostname').val()
+    addhostip=$('#addhostip').val()
+    addfields=$('#addfields').val()
+    addclusters=$('#addclusters').val()
+    addcomponents=$('#addcomponents').val()
+    addhostport=$('#addhostport').val()
+    var exp1=/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/;
+    var reg1=addhostip.match(exp1);
+    if(addhostname==''||addhostip==''||addfields=='--- 请选择生产域 ---'||addclusters=='--- 请选择集群约束 ---'||addclusters==''||addcomponents=='--- 请选择组件 ---'||addcomponents==''||addhostport=='')
+    {
+        alert('信息填写不完整！')
+        return
+    }
+    if(reg1==null){
+        alert('IP地址不合法！')
+        return
+    }
+    var exp2=/^[1-9]\d{0,}$/
+    var reg2=addhostport.match(exp2);
+    if(reg2==null){
+        alert('端口不合法！')
+        return
+    }
+    $.get("/add_host",{'ip': addhostip,'field':addfields,'name':addhostname,'cluster':addclusters,'comp_name':addcomponents,'comp_port':addhostport}, function (ret) {
+            var addres = ret.addres;
+            if (addres.status==1){
+                alert('添加成功！')
+                $('#addhostmodal').modal('hide')
+            }
+            else{
+                alert(addres.error)
+            }
+    })
+}
+
+function getfiels(){
+    $.get("/search_field",{}, function (ret) {
+            var fields = ret.fields;
+            options='<option >--- 请选择生产域 ---</option>'
+            for(var i = 0; i < fields.length; i++){
+                options+='<option>'+fields[i]+'</option>'
+            }
+            $('#addfields').html(options)
+        })
+}
+
+function getcomponent(){
+    $.get("/get_component",{}, function (ret) {
+            var components = ret.components;
+            options='<option >--- 请选择组件 ---</option>'
+            for(var i = 0; i < components.length; i++){
+                options+='<option>'+components[i]+'</option>'
+            }
+            $('#addcomponents').html(options)
+        })
+}
+
+function getclusters(){
+    var x=document.getElementById("addfields");
+    addfield=x.value
+    $.get("/get_cluster", {'field': addfield}, function (ret) {
+            var clusters = ret.clusters;
+            options='<option >--- 请选择集群约束 ---</option>'
+            for(var i = 0; i < clusters.length; i++){
+                options+='<option>'+clusters[i]+'</option>'
+            }
+            $('#addclusters').html(options)
+        })
 }
 
 function extractip(){

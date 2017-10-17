@@ -9,6 +9,78 @@ from django.db.models import Q
 import log_operation
 import docker_operation
 
+def checkip(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        ip = request.GET.get("ip")
+
+        host_query_res = Host.objects.filter(ip=ip)
+        if len(host_query_res)==0:
+            error='new'
+            status=0
+            checkres={'status':status,'error':error}
+        else:
+            cluster_id=host_query_res[0].cluster_id
+            name=host_query_res[0].name
+            cluster0 = Cluster.objects.filter(id=cluster_id)[0]
+            cluster=cluster0.name
+            field_id=cluster0.field_id
+            field=Field.objects.filter(id=field_id)[0].name
+            error='old'
+            status=1
+            checkres={'status':status,'error':error,'field':field,'cluster':cluster,'name':name,'ip':ip}
+        check_info_res = {"checkres": checkres}
+        return HttpResponse(json.dumps(check_info_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
+def addhost(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        field = request.GET.get("field")
+        cluster = request.GET.get("cluster")
+        name = request.GET.get("name")
+        ip = request.GET.get("ip")
+        comp_name = request.GET.get("comp_name")
+        comp_port = request.GET.get("comp_port")
+
+        host_query_res = Host.objects.filter(ip=ip)
+        if len(host_query_res)==0:
+            status=1
+            field_id = Field.objects.filter(name=field)[0].id
+            cluster_id = Cluster.objects.filter(name=cluster,field_id=field_id)[0].id
+            newhost=Host(name=name,ip=ip,cluster_id=cluster_id,comp_port=comp_port,comp_name=comp_name)
+            saveres=newhost.save()
+            addres={'status':status,'saveres':saveres}
+            add_info_res = {"addres": addres}
+            return HttpResponse(json.dumps(add_info_res), content_type='application/json')
+        else:
+            field_id = Field.objects.filter(name=field)[0].id
+            cluster_id = Cluster.objects.filter(name=cluster,field_id=field_id)[0].id
+            host_query_res = Host.objects.filter(ip=ip,cluster_id=cluster_id,name=name)
+            if len(host_query_res)==0:
+                status=0
+                error='该主机IP已经存在于其他集群，或该主机名和主机IP不对应'
+            else:
+                host_query_res = Host.objects.filter(ip=ip,comp_port=comp_port)
+                if len(host_query_res)!=0:
+                    status=0
+                    error='该主机端口已经被其他组件占用！'
+                else:
+                    status=1
+                    newhost=Host(name=name,ip=ip,cluster_id=cluster_id,comp_port=comp_port,comp_name=comp_name)
+                    saveres=newhost.save()
+                    addres={'status':status,'saveres':saveres}
+                    add_info_res = {"addres": addres}
+                    return HttpResponse(json.dumps(add_info_res), content_type='application/json')
+        addres={'status':status,'error':error}
+        add_info_res = {"addres": addres}
+        return HttpResponse(json.dumps(add_info_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
 def delexitdockers(request):
     is_login = request.session.get('IS_LOGIN', False)
     if is_login:
@@ -122,6 +194,31 @@ def search_field(request):
         response = HttpResponseRedirect('/')
         return render(request, 'login.html')
 
+def get_field(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        fields = []
+        fields_query_res = Field.objects.all()
+        for item in fields_query_res:
+            fields.append(item.name)
+        fields_res = {"fields": fields}
+        return HttpResponse(json.dumps(fields_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
+
+def search_component(request):
+    is_login = request.session.get('IS_LOGIN', False)
+    if is_login:
+        components = []
+        components_query_res = Host.objects.values('comp_name').distinct()
+        for item in components_query_res:
+            components.append(item['comp_name'])
+        components_res = {"components": components}
+        return HttpResponse(json.dumps(components_res), content_type='application/json')
+    else:
+        response = HttpResponseRedirect('/')
+        return render(request, 'login.html')
 
 def search_cluster(request):
     is_login = request.session.get('IS_LOGIN', False)
