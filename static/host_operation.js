@@ -1,3 +1,33 @@
+function addhost(){
+        context='<ul>'+
+                        '<li>主机名:<input type="text" ></li>'+
+                        '<li>主机IP:<input type="password" ></li>'
+        context += '<li>归属域:'+'<select id="fields" name="fields" class="form-control">'+
+                        '<option >--- 请选择生产域 ---</option>' +
+                            '<option>内网(DCOS)</option>' +
+                            '<option>DMZ</option>' +
+                            '<option>DCOS 3.0</option>' +
+                            '<option>内网(非DCOS)</option>' +
+                   '</select>' + '</li>'
+        context += '<li>归属约束:'+'<select id="fields" name="fields" class="form-control">'+
+                        '<option >--- 请选择集群约束 ---</option>' +
+                            '<option>无</option>' +
+                            '<option>dcos:center-n</option>' +
+                            '<option>dcos:center-d</option>' +
+                            '<option>dcos:LITTLEAPP</option>' +
+                            '<option>centering:sd</option>' +
+                            '<option>centering:sq</option>' +
+                            '<option>dcos:XYL-DISHI</option>' +
+                            '<option>dcos:DMZ-XYL</option>' +
+                   '</select>' + '</li>'
+        context +='</ul>'
+        var modalbody='table'
+        modalbody=context
+        console.log(context)
+        $("#addhostbody").html(modalbody);
+        $('#addhostmodal').modal('show');
+}
+
 function extractip(){
     var modallabel='主机ip';
     var modalbody='table'
