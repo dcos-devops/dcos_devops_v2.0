@@ -44,9 +44,9 @@ def empty_log(hostname, port, username, password, loginfo):
 
     #Todo
     #判断选择的问题是否合规,是不是.log结尾
-    if loginfo[-4:]!='.log':
-        return 'this is not a logfile end with .log'
-
+    #if loginfo[-4:]!='.log':
+    #    return 'this is not a logfile end with .log'
+    # 取消判断,生产上.tar.gz也能写空，达到清理空间的目的。同时mesos的日志是不规范的。
     execmd = "> %s" % loginfo
     s.connect(hostname=hostname, port=port, username=username, password=password)
     stdin, stdout, stderr = s.exec_command (execmd)
