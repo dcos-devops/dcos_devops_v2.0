@@ -33,10 +33,14 @@ def show_exit_docker(hostname, port, username, password):
     return dockerinfos
 
 def del_docker(hostname, port, username, password, dockerid):
+    '''
+       删除处于exit和create的容器。 远程调用docker rm -f -v 
+       @dockerid: 容器的id
+    '''
     paramiko.util.log_to_file("paramiko.log")
     s = paramiko.SSHClient()
     s.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    execmd="docker rm "+dockerid
+    execmd="docker rm -f -v "+dockerid
     s.connect(hostname=hostname, port=port, username=username, password=password)
     stdin, stdout, stderr = s.exec_command (execmd)
     stdin.write("Y")  # Generally speaking, the first connection, need a simple interaction.
