@@ -4,6 +4,13 @@
 import paramiko
 
 def show_log(hostname, port, username, password, execmd):
+    '''
+    展示日志文件。目前定位为/data/logs下。同时大小格式统一标准为M
+    @hostname:要远程的主机IP，
+    @port:能够ssh的端口，一般为22
+    @username,password：用户名和密码
+    @execmd：要执行的命令
+    '''
     paramiko.util.log_to_file("paramiko.log")
     s = paramiko.SSHClient()
     s.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -26,6 +33,9 @@ def show_log(hostname, port, username, password, execmd):
     return fileinfos
 
 def del_log(hostname, port, username, password, loginfo):
+    '''
+    @loginfo:日志文件的绝对路径
+    '''
     paramiko.util.log_to_file("paramiko.log")
     s = paramiko.SSHClient()
     s.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -38,6 +48,9 @@ def del_log(hostname, port, username, password, loginfo):
     return dd
 
 def empty_log(hostname, port, username, password, loginfo):
+    '''
+    写空日志
+    '''
     paramiko.util.log_to_file("paramiko.log")
     s = paramiko.SSHClient()
     s.set_missing_host_key_policy(paramiko.AutoAddPolicy())
