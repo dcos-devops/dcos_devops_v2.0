@@ -85,6 +85,8 @@ def delexitdockers(request):
     is_login = request.session.get('IS_LOGIN', False)
     if is_login:
         # hostip = request.GET.get("hostip")
+        #TODO
+        # get the password from the db.and not use the root.
         hostip = '20.26.33.32'
         password = '20172Epc'
         port = 22
